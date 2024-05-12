@@ -5,7 +5,8 @@ from dataset import *
 import os
 from sklearn import metrics
 
-normal_train_dataset = Normal_Loader(is_train=1)
+data_dir = './DATA/UCF-Crime'
+normal_train_dataset = Normal_Loader(is_train=1, path=data_dir)
 normal_test_dataset = Normal_Loader(is_train=0)
 
 anomaly_train_dataset = Anomaly_Loader(is_train=1)
@@ -23,6 +24,7 @@ model = Learner(input_dim=2048, drop_p=0.0).to(device)
 optimizer = torch.optim.Adagrad(model.parameters(), lr= 0.001, weight_decay=0.0010000000474974513)
 scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[25, 50])
 criterion = MIL
+
 
 def train(epoch):
     print('\nEpoch: %d' % epoch)
@@ -42,6 +44,7 @@ def train(epoch):
         train_loss += loss.item()
     print('loss = {}', train_loss/len(normal_train_loader))
     scheduler.step()
+
 
 def test_abnormal(epoch):
     model.eval()
@@ -79,6 +82,7 @@ def test_abnormal(epoch):
             fpr, tpr, thresholds = metrics.roc_curve(gt_list3, score_list3, pos_label=1)
             auc += metrics.auc(fpr, tpr)
         print('auc = ', auc/140)
+
 
 for epoch in range(0, 75):
     train(epoch)

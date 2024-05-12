@@ -60,6 +60,7 @@ class Anomaly_Loader(Dataset):
 
     def __getitem__(self, idx):
         if self.is_train == 1:
+            breakpoint() # self.data_list
             rgb_npy = np.load(os.path.join(self.path+'all_rgbs', self.data_list[idx][:-1]+'.npy'))
             flow_npy = np.load(os.path.join(self.path+'all_flows', self.data_list[idx][:-1]+'.npy'))
             concat_npy = np.concatenate([rgb_npy, flow_npy], axis=1)
